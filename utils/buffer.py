@@ -3,7 +3,7 @@ import torch
 
 
 class ReplayBuffer(object):
-    def __init__(self, state_dim, action_dim, device, env_id: str, max_size=int(1e6)):
+    def __init__(self, state_dim, action_dim, device, env_id: str, scale, shift, max_size=int(1e6)):
         self.max_size = max_size
         self.ptr = 0
         self.size = 0
@@ -16,6 +16,8 @@ class ReplayBuffer(object):
         self.not_done = np.zeros((max_size, 1))
 
         self.device = torch.device(device)
+        self.scale = scale
+        self.shift = shift 
 
     def add(self, state, action, next_state, reward, done):
         self.state[self.ptr] = state
@@ -38,10 +40,9 @@ class ReplayBuffer(object):
             torch.FloatTensor(self.not_done[ind]).to(self.device)
         ]
         
-        if self.env_id.startswith("antmaze"):
-            # reward shaping, r = w * r + b, from CQL, FisherBRC, IQL, etc.
-            # a common trick used for sparse reward env
-            transition[3] = 10_000* transition[3] - 1
+        # reward shaping, r = scale * r + shift, from CQL, FisherBRC, IQL, etc.
+        # a common trick used for sparse reward env
+        transition[3] = self.scale * transition[3] + self.shift
         
         return transition
 

@@ -47,7 +47,7 @@ if __name__ == "__main__":
     os.makedirs(ckpt_dir, exist_ok=True)
     model_path = os.path.join(ckpt_dir, model_name + ".pth")
     
-    replay_buffer = ReplayBuffer(kwargs["state_dim"], kwargs["action_dim"], args.device, args.env_id)
+    replay_buffer = ReplayBuffer(kwargs["state_dim"], kwargs["action_dim"], args.device, args.env_id, args.scale, args.shift)
     replay_buffer.convert_D4RL(d4rl.qlearning_dataset(env))
     if args.normalize:
         mean, std = replay_buffer.normalize_states()

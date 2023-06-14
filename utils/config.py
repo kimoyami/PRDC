@@ -55,6 +55,14 @@ def get_config(algorithm="PRDC"):
     parser.add_argument(
         "--normalize", default=True, action="store_false"
     )  # Whether to normalize the states
+    parser.add_argument(
+        "--scale", default=1, type=int
+    ) 
+    parser.add_argument(
+        "--shift", default=0, type=int
+    ) 
+    # reward_new = reward_old * scale + shift
+    
     # KD_TREE
     parser.add_argument("--alpha", default=2.5, type=float)
     parser.add_argument("--beta", default=1.0, type=float)
