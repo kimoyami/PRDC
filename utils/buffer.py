@@ -42,7 +42,7 @@ class ReplayBuffer(object):
         
         # reward shaping, r = scale * r + shift, from CQL, FisherBRC, IQL, etc.
         # a common trick used for sparse reward env
-        transition[3] = self.scale * transition[3] + self.shift
+        transition[2] = self.scale * transition[2] + self.shift
         
         return transition
 
